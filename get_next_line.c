@@ -6,11 +6,35 @@
 /*   By: sakarkal <sakarkal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/13 10:29:00 by sakarkal          #+#    #+#             */
-/*   Updated: 2022/11/16 05:27:50 by sakarkal         ###   ########.fr       */
+/*   Updated: 2022/11/16 05:59:48 by sakarkal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+char	*ft_read_save(int fd, char *save)
+{
+	char	*buff;
+	int		read_bytes;
+
+	read_bytes = 1;
+	while (!ft_search(save, '\n') && read_bytes != 0)
+	{
+		buff = malloc((BUFFER_SIZE + 1) * sizeof(char));
+		if (!buff)
+			return (NULL);
+		read_bytes = read(fd, buff, BUFFER_SIZE);
+		if (read_bytes == -1)
+		{
+			free(buff);
+			return (NULL);
+		}
+		buff[read_bytes] = '\0';
+		save = ft_strjoin(save, buff);
+		free(buff);
+	}
+	return (save);
+}
 
 char	*the_line(char *save)
 {
@@ -64,30 +88,6 @@ char	*saver(char *save)
 	s[c] = '\0';
 	free(save);
 	return (s);
-}
-
-char	*ft_read_save(int fd, char *save)
-{
-	char	*buff;
-	int		read_bytes;
-
-	read_bytes = 1;
-	while (!ft_search(save, '\n') && read_bytes != 0)
-	{
-		buff = malloc((BUFFER_SIZE + 1) * sizeof(char));
-		if (!buff)
-			return (NULL);
-		read_bytes = read(fd, buff, BUFFER_SIZE);
-		if (read_bytes == -1)
-		{
-			free(buff);
-			return (NULL);
-		}
-		buff[read_bytes] = '\0';
-		save = ft_strjoin(save, buff);
-		free(buff);
-	}
-	return (save);
 }
 
 char	*get_next_line(int fd)
