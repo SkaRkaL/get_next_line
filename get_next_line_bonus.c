@@ -1,41 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sakarkal <sakarkal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/13 10:29:00 by sakarkal          #+#    #+#             */
-/*   Updated: 2022/11/16 18:04:20 by sakarkal         ###   ########.fr       */
+/*   Created: 2022/11/16 16:18:20 by sakarkal          #+#    #+#             */
+/*   Updated: 2022/11/17 10:50:57 by sakarkal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include"get_next_line_bonus.h"
 
-char	*read_and_store(int fd, char *save)
-{
-	char	*buff;
-	int		read_bytes;
-
-	read_bytes = 1;
-	while (!ft_search(save, '\n') && read_bytes != 0)
-	{
-		buff = malloc((BUFFER_SIZE + 1) * sizeof(char));
-		if (!buff)
-			return (NULL);
-		read_bytes = read(fd, buff, BUFFER_SIZE);
-		if (read_bytes == -1)
-		{
-			free(buff);
-			return (NULL);
-		}
-		buff[read_bytes] = '\0';
-		save = ft_strjoin(save, buff);
-	}
-	return (save);
-}
-
-char	*the_line(char *save)
+char	*get_line(char *save)
 {
 	int		i;
 	char	*str;
@@ -89,26 +66,49 @@ char	*the_saver(char *save)
 	return (str);
 }
 
+char	*read_and_store(int fd, char *save)
+{
+	char	*buff;
+	int		read_bytes;
+
+	read_bytes = 1;
+	while (!ft_search(save, '\n') && read_bytes != 0)
+	{
+		buff = malloc((BUFFER_SIZE + 1) * sizeof(char));
+		if (!buff)
+			return (NULL);
+		read_bytes = read(fd, buff, BUFFER_SIZE);
+		if (read_bytes == -1)
+		{
+			free(buff);
+			return (NULL);
+		}
+		buff[read_bytes] = '\0';
+		save = ft_strjoin(save, buff);
+	}
+	return (save);
+}
+
 char	*get_next_line(int fd)
 {
 	char		*line;
-	static char	*save;
+	static char	*save[10240];
 	char		*temp;
 
 	line = 0;
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 || fd >= 10240)
 		return (0);
-	temp = read_and_store(fd, save);
+	temp = read_and_store(fd, save[fd]);
 	if (!temp)
 	{
-		if (save)
-			free(save);
-		save = NULL;
+		if (save[fd])
+			free(save[fd]);
+		save[fd] = NULL;
 		return (NULL);
 	}
-	save = temp;
-	if (save)
-		line = the_line(save);
-	save = the_saver(save);
+	save[fd] = temp;
+	if (save[fd])
+		line = get_line(save[fd]);
+	save[fd] = the_saver(save[fd]);
 	return (line);
 }
