@@ -6,38 +6,38 @@
 /*   By: sakarkal <sakarkal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 16:18:20 by sakarkal          #+#    #+#             */
-/*   Updated: 2022/11/17 10:50:57 by sakarkal         ###   ########.fr       */
+/*   Updated: 2022/11/19 04:25:36 by sakarkal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include"get_next_line_bonus.h"
 
-char	*get_line(char *save)
+char	*the_line(char *save)
 {
 	int		i;
-	char	*str;
+	char	*line;
 
 	i = 0;
 	if (!save[i])
 		return (NULL);
 	while (save[i] && save[i] != '\n')
 		i++;
-	str = malloc(sizeof(char) * (i + 2));
-	if (!str)
+	line = malloc(sizeof(char) * (i + 2));
+	if (!line)
 		return (NULL);
 	i = 0;
 	while (save[i] && save[i] != '\n')
 	{
-		str[i] = save[i];
+		line[i] = save[i];
 		i++;
 	}
 	if (save[i] == '\n')
 	{
-		str[i] = save[i];
+		line[i] = save[i];
 		i++;
 	}
-	str[i] = '\0';
-	return (str);
+	line[i] = '\0';
+	return (line);
 }
 
 char	*the_saver(char *save)
@@ -96,7 +96,7 @@ char	*get_next_line(int fd)
 	char		*temp;
 
 	line = 0;
-	if (fd < 0 || BUFFER_SIZE <= 0 || fd >= 10240)
+	if (fd < 0 || BUFFER_SIZE <= 0 || fd > 10240)
 		return (0);
 	temp = read_and_store(fd, save[fd]);
 	if (!temp)
@@ -108,7 +108,7 @@ char	*get_next_line(int fd)
 	}
 	save[fd] = temp;
 	if (save[fd])
-		line = get_line(save[fd]);
+		line = the_line(save[fd]);
 	save[fd] = the_saver(save[fd]);
 	return (line);
 }

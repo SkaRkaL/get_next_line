@@ -6,7 +6,7 @@
 /*   By: sakarkal <sakarkal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/13 10:29:00 by sakarkal          #+#    #+#             */
-/*   Updated: 2022/11/16 18:04:20 by sakarkal         ###   ########.fr       */
+/*   Updated: 2022/11/19 01:50:58 by sakarkal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,29 +38,29 @@ char	*read_and_store(int fd, char *save)
 char	*the_line(char *save)
 {
 	int		i;
-	char	*str;
+	char	*line;
 
 	i = 0;
 	if (!save[i])
 		return (NULL);
 	while (save[i] && save[i] != '\n')
 		i++;
-	str = malloc(sizeof(char) * (i + 2));
-	if (!str)
+	line = malloc(sizeof(char) * (i + 2));
+	if (!line)
 		return (NULL);
 	i = 0;
 	while (save[i] && save[i] != '\n')
 	{
-		str[i] = save[i];
+		line[i] = save[i];
 		i++;
 	}
 	if (save[i] == '\n')
 	{
-		str[i] = save[i];
+		line[i] = save[i];
 		i++;
 	}
-	str[i] = '\0';
-	return (str);
+	line[i] = '\0';
+	return (line);
 }
 
 char	*the_saver(char *save)
